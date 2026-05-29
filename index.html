@@ -116,6 +116,9 @@ header .noai span{color:var(--rose-deep)}
 .dragon-eye .eye-glow{opacity:0}
 .hero-art.cracked .dragon-eye .eye-glow{animation:egFade .9s ease .45s forwards}
 .dragon-eye .eye-lids{transform-box:fill-box;transform-origin:center;transform:scaleY(0)}
+.dragon-eye .eye-ball{transition:transform .18s ease-out;transform:translate(var(--ex,0px),var(--ey,0px))}
+.eye-msg{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);font-family:'Cinzel',serif;letter-spacing:.22em;text-transform:uppercase;font-size:.74rem;color:#fdf4d8;text-shadow:0 0 8px rgba(247,201,72,.7),0 0 18px rgba(247,201,72,.35);opacity:0;pointer-events:none;white-space:nowrap}
+.hero-art.cracked .eye-msg{animation:egFade .8s ease 1.4s forwards}
 .hero-art.cracked .dragon-eye .eye-lids{animation:eyeOpen .85s cubic-bezier(.2,.85,.3,1) .45s forwards,eyeBlink 5.5s ease-in-out 1.7s infinite}
 @keyframes eyeOpen{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 @keyframes eyeBlink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.07)}}
@@ -305,9 +308,11 @@ footer .credit a:hover{border-color:var(--rose-deep)}
           <g class="eye-lids">
             <path d="M12 100 Q100 36 188 100 Q100 164 12 100 Z" fill="#170c07"/>
             <g clip-path="url(#deClip)">
-              <circle cx="100" cy="100" r="50" fill="url(#deIris)"/>
-              <path d="M100 54 Q112 100 100 146 Q88 100 100 54 Z" fill="#120802"/>
-              <ellipse cx="116" cy="82" rx="9" ry="5" fill="#fff" opacity=".5"/>
+              <g class="eye-ball">
+                <circle cx="100" cy="100" r="50" fill="url(#deIris)"/>
+                <path d="M100 54 Q112 100 100 146 Q88 100 100 54 Z" fill="#120802"/>
+                <ellipse cx="116" cy="82" rx="9" ry="5" fill="#fff" opacity=".5"/>
+              </g>
             </g>
             <path d="M12 100 Q100 36 188 100 Q100 164 12 100 Z" fill="none" stroke="#3c1d0c" stroke-width="3"/>
           </g>
@@ -328,6 +333,7 @@ footer .credit a:hover{border-color:var(--rose-deep)}
           </g>
         </svg>
         <div class="crack-flash"></div>
+        <div class="eye-msg">She sees you</div>
       </div>
       <button class="secret-star" type="button" aria-label="A hidden star"></button>
     </div>
@@ -530,12 +536,21 @@ lbClose.addEventListener('click',()=>lb.classList.remove('open'));
 // hero easter egg
 const heroArt=document.querySelector('.hero-art');
 if(heroArt){
-  const star=heroArt.querySelector('.secret-star'),crackLayer=heroArt.querySelector('.crack-layer');
+  const star=heroArt.querySelector('.secret-star'),crackLayer=heroArt.querySelector('.crack-layer'),eyeBall=heroArt.querySelector('.eye-ball'),eyeSvg=heroArt.querySelector('.dragon-eye');
   let healTimer;
-  const heal=()=>{heroArt.classList.remove('cracked');clearTimeout(healTimer);};
+  const heal=()=>{heroArt.classList.remove('cracked');clearTimeout(healTimer);eyeBall.style.setProperty('--ex','0px');eyeBall.style.setProperty('--ey','0px');};
   const crack=()=>{heroArt.classList.add('cracked');clearTimeout(healTimer);healTimer=setTimeout(heal,7000);};
   star.addEventListener('click',e=>{e.stopPropagation();heroArt.classList.contains('cracked')?heal():crack();});
   crackLayer.addEventListener('click',heal);
+  addEventListener('mousemove',e=>{
+    if(!heroArt.classList.contains('cracked'))return;
+    const r=eyeSvg.getBoundingClientRect();if(!r.width)return;
+    const dx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/(r.width/2)));
+    const dy=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/(r.height/2)));
+    const k=0.11;
+    eyeBall.style.setProperty('--ex',(dx*k*(r.width/2))+'px');
+    eyeBall.style.setProperty('--ey',(dy*k*(r.height/2))+'px');
+  });
 }
 </script>
 </body>
