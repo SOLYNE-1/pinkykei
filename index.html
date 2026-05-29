@@ -88,9 +88,14 @@ header .noai span{color:var(--rose-deep)}
 .btn{display:inline-block;font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;padding:15px 34px;border-radius:30px;cursor:pointer;transition:.35s}
 .btn-primary{background:linear-gradient(120deg,var(--rose),var(--peach));color:#5a3a3a;border:1px solid var(--rose)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(207,127,140,.55)}
-.btn-ghost{border:1px solid var(--olive);color:var(--olive-deep);margin-left:14px;background:transparent}
+.btn-ghost{border:1px solid var(--olive);color:var(--olive-deep);background:transparent}
 .btn-ghost:hover{background:rgba(138,143,94,.12)}
-@media(max-width:420px){.btn-ghost{margin-left:0;margin-top:12px}}
+.btn-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.contact .btn-row{justify-content:center}
+@media(max-width:560px){
+  .btn-row{flex-direction:column;align-items:center}
+  .btn-row .btn{width:100%;max-width:300px;margin:0;text-align:center}
+}
 
 .hero-art{position:relative}
 .hero-art img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:1px solid var(--line);box-shadow:0 40px 70px -34px rgba(160,110,110,.45),0 0 0 1px rgba(255,255,255,.5) inset;display:block}
@@ -239,7 +244,7 @@ footer .credit a:hover{border-color:var(--rose-deep)}
       <h1>Pinky&nbsp;Kei</h1>
       <p class="lede">Digital illustration for romantic fantasy — the lovers, the dragons, the magic. I bring characters and book covers to life with darkness and bloom, shadows and shimmer, the haunting and the beautiful.</p>
       <p class="noai"><span>✦</span> No AI — every piece drawn entirely by me</p>
-      <div>
+      <div class="btn-row">
         <a href="#contact" class="btn btn-primary">Request a Commission</a>
         <a href="#gallery" class="btn btn-ghost">View Gallery</a>
       </div>
@@ -298,7 +303,7 @@ footer .credit a:hover{border-color:var(--rose-deep)}
 <section id="process">
   <div class="wrap">
     <p class="eyebrow reveal">How It Works</p>
-    <h2 class="sec-title reveal">A cover made just for you</h2>
+    <h2 class="sec-title reveal">Art made just for you</h2>
     <div class="divider reveal"></div>
     <div class="steps reveal">
       <div class="step"><span class="num">01</span><h4>Inquiry</h4><p>Tell me about your story, characters, and the mood you're after. References welcome — clear vision or blank slate, both work.</p></div>
@@ -411,7 +416,7 @@ footer .credit a:hover{border-color:var(--rose-deep)}
     <p class="eyebrow reveal">Let's Work Together</p>
     <h2 class="reveal">Bring your story to life</h2>
     <p class="reveal">Commissions are open. Show me what you have in mind: a cover, a character, a moment from your book. References, rough ideas, anything — I'd love to illustrate it for you.</p>
-    <div class="reveal">
+    <div class="btn-row reveal">
       <a href="mailto:pinkykeiillustrations@gmail.com" class="btn btn-primary">Request a Commission</a>
       <a href="https://ko-fi.com/pinkykei/shop" class="btn btn-ghost" target="_blank" rel="noopener">Visit the Shop</a>
     </div>
