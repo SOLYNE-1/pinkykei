@@ -104,6 +104,11 @@ header .noai span{color:var(--rose-deep)}
 
 /* sections */
 section{padding:100px 0;position:relative}
+@media(max-width:600px){
+  section{padding:56px 0}
+  header{padding:100px 0 44px}
+  .sec-sub{margin-bottom:36px}
+}
 .eyebrow{font-family:'Cinzel',serif;font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--olive-deep);text-align:center;margin-bottom:14px}
 .sec-title{font-size:clamp(2.2rem,4.5vw,3.4rem);text-align:center;color:var(--ink);margin-bottom:18px}
 .sec-sub{text-align:center;color:var(--ink-soft);max-width:38rem;margin:0 auto 56px;font-size:1.05rem}
@@ -406,7 +411,9 @@ footer .credit a:hover{border-color:var(--rose-deep)}
       <p>— but you may know me as Pinky Kei. I'm a digital illustrator in love with romantic fantasy and dark romance: the drama, the danger, the impossible longing, the slow burn — and my absolute favourite, enemies to lovers. My work lives in that space between tenderness and darkness, where readers like us feel at home.</p>
       <p>I'm self-taught (though I had a few art-school years as a child). I found my way back to drawing only after university, in 2019, when I wanted to bring my own fanfiction characters to life. That spark never went away. Now I help authors do the same: bring their characters and stories into the light.</p>
       <p>Every commission is made together with you — hand-made, personal, and true to your world. <span class="rose">✦</span></p>
-      <a href="#contact" class="btn btn-primary" style="margin-top:14px">Start a Commission</a>
+      <div class="btn-row">
+        <a href="#contact" class="btn btn-primary" style="margin-top:14px">Start a Commission</a>
+      </div>
     </div>
   </div>
 </section>
