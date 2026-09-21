@@ -1,0 +1,13 @@
+{
+  "character.headshot": { "group": "1. Character Art", "label": "Head shot", "pre": "from", "amount": "$60" },
+  "character.halfbody": { "group": "1. Character Art", "label": "Half body", "pre": "from", "amount": "$80" },
+  "character.fullbody": { "group": "1. Character Art", "label": "Full body", "pre": "from", "amount": "$100" },
+  "character.extra": { "group": "1. Character Art", "label": "Extra character", "amount": "+100%", "post": "of base" },
+  "scene.two": { "group": "2. Scene & Background", "label": "2 characters (without background)", "amount": "$200" },
+  "scene.extra": { "group": "2. Scene & Background", "label": "Extra character", "amount": "+$80" },
+  "scene.bg_simple": { "group": "2. Scene & Background", "label": "Background — Simple", "amount": "+$30" },
+  "scene.bg_medium": { "group": "2. Scene & Background", "label": "Background — Medium", "amount": "+$50" },
+  "scene.bg_complex": { "group": "2. Scene & Background", "label": "Background — Complex", "amount": "+$80" },
+  "cover.front": { "group": "3. Book Cover", "label": "Front cover", "amount": "$170" },
+  "cover.full": { "group": "3. Book Cover", "label": "Full cover (wraparound)", "pre": "from", "amount": "$300" }
+}

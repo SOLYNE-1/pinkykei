@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Pinky Kei — Прайс</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Spectral:wght@300;400;500&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fbf4ec; --cream-2:#f6ebe0; --rose:#e8a6ad; --rose-deep:#cf7f8c; --rose-soft:#f3d4d6;
+  --peach:#f0b58a; --olive:#8a8f5e; --olive-deep:#6e7449; --ink:#5a4747; --ink-soft:#8a7670;
+  --ink-dim:#a9968f; --line:rgba(138,143,94,0.28); --gold:#c79a52;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--cream);color:var(--ink);
+  font-family:'Spectral',Georgia,serif;font-weight:300;line-height:1.6;letter-spacing:.2px;
+  min-height:100vh;padding:40px 16px 80px;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse 75% 55% at 15% -10%, rgba(243,212,214,0.7), transparent 60%),
+    radial-gradient(ellipse 65% 50% at 92% 5%, rgba(248,216,190,0.6), transparent 55%),
+    linear-gradient(180deg,#fbf4ec 0%,#f7eee4 55%,#f4ece2 100%);
+}
+.wrap{max-width:560px;margin:0 auto}
+.brand{font-family:'Cinzel',serif;letter-spacing:.22em;color:var(--rose-deep);font-size:1.05rem;text-align:center}
+h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:2rem;text-align:center;margin:8px 0 4px}
+.sub{text-align:center;color:var(--ink-soft);font-size:.9rem;margin-bottom:30px}
+.sub a{color:var(--olive-deep)}
+.card{
+  border:1px solid var(--line);border-radius:12px;padding:26px 22px;margin-bottom:20px;
+  background:linear-gradient(170deg,rgba(255,255,255,.75),rgba(246,235,224,.6));
+}
+.card h2{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;color:var(--olive-deep);margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(138,143,94,.14)}
+.row:last-child{border-bottom:none}
+.row .label{font-size:.95rem;color:var(--ink);flex:1}
+.row .value{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.row .fix{color:var(--ink-dim);font-size:.78rem}
+.row input{
+  width:96px;padding:8px 10px;text-align:right;
+  font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;color:var(--rose-deep);
+  border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.8);outline:none;transition:border .3s;
+}
+.row input:focus{border-color:var(--rose-deep)}
+.btn{
+  display:block;width:100%;font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:16px;border-radius:30px;cursor:pointer;transition:.35s;border:1px solid var(--rose);
+  background:linear-gradient(120deg,var(--rose),var(--peach));color:#5a3a3a;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(207,127,140,.55)}
+.btn:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
+#status{text-align:center;margin-top:16px;font-size:.95rem;min-height:1.6em}
+#status.ok{color:var(--olive-deep)}
+#status.err{color:#b04a5a}
+#status.busy{color:var(--ink-soft)}
+.token-card small{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:10px}
+.token-row{display:flex;gap:10px;margin-top:6px}
+.token-row input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.8);font-size:.9rem;outline:none;color:var(--ink)}
+.token-row button{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:8px;border:1px solid var(--olive);background:rgba(138,143,94,.1);color:var(--olive-deep);cursor:pointer}
+.token-ok{color:var(--olive-deep);font-size:.9rem}
+.token-ok a{color:var(--ink-dim);font-size:.8rem;cursor:pointer;text-decoration:underline}
+details{margin-top:12px;font-size:.85rem;color:var(--ink-soft)}
+details summary{cursor:pointer;color:var(--olive-deep)}
+details ol{margin:10px 0 0 20px}
+details li{margin-bottom:6px}
+details a{color:var(--rose-deep)}
+.loading{text-align:center;color:var(--ink-dim);padding:30px 0;font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">PINKY KEI</div>
+  <h1>Управление прайсом</h1>
+  <p class="sub">Поменяй цифры и нажми «Опубликовать» — сайт <a href="https://pinkykei.art/#pricing" target="_blank" rel="noopener">pinkykei.art</a> обновится через 1–2&nbsp;минуты ✦</p>
+
+  <div class="card token-card" id="token-card">
+    <h2>🔑 Доступ</h2>
+    <div id="token-setup" hidden>
+      <div class="token-row">
+        <input type="password" id="token-input" placeholder="Вставь сюда токен" autocomplete="off">
+        <button type="button" id="token-save">Сохранить</button>
+      </div>
+      <small>Токен хранится только в этом браузере и никуда, кроме GitHub, не отправляется.</small>
+      <details>
+        <summary>Где взять токен?</summary>
+        <ol>
+          <li>Зайди на GitHub под аккаунтом, у которого есть доступ к репозиторию <b>SOLYNE-1/pinkykei</b>.</li>
+          <li>Открой <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Settings → Developer settings → Fine-grained tokens → Generate new token</a>.</li>
+          <li>Repository access: <b>Only select repositories</b> → выбери <b>pinkykei</b>.</li>
+          <li>Permissions → Repository permissions → <b>Contents: Read and write</b>. Больше ничего не нужно.</li>
+          <li>Срок действия поставь максимальный, создай токен и вставь его сюда.</li>
+        </ol>
+      </details>
+    </div>
+    <div id="token-done" hidden>
+      <span class="token-ok">Токен сохранён ✓ &nbsp;<a id="token-change">сменить</a></span>
+    </div>
+  </div>
+
+  <div id="form-area"><p class="loading">Загружаю цены…</p></div>
+
+  <button class="btn" id="publish" type="button">✦ Опубликовать</button>
+  <p id="status"></p>
+</div>
+
+<script>
+const OWNER='SOLYNE-1',REPO='pinkykei',BRANCH='main',FILE='prices.json';
+const API='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+FILE;
+const $=s=>document.querySelector(s);
+
+let TOKEN='';
+try{TOKEN=localStorage.getItem('pk_admin_token')||''}catch(e){}
+
+function refreshTokenUI(){
+  $('#token-setup').hidden=!!TOKEN;
+  $('#token-done').hidden=!TOKEN;
+}
+refreshTokenUI();
+$('#token-save').addEventListener('click',()=>{
+  const v=$('#token-input').value.trim();
+  if(!v){showStatus('err','Поле с токеном пустое.');return;}
+  TOKEN=v;
+  try{localStorage.setItem('pk_admin_token',v)}catch(e){}
+  $('#token-input').value='';
+  showStatus('ok','Токен сохранён на этом устройстве.');
+  refreshTokenUI();
+});
+$('#token-change').addEventListener('click',()=>{
+  TOKEN='';
+  try{localStorage.removeItem('pk_admin_token')}catch(e){}
+  refreshTokenUI();
+});
+
+function showStatus(cls,msg){const s=$('#status');s.className=cls;s.textContent=msg;}
+
+function b64encode(str){return btoa(unescape(encodeURIComponent(str)))}
+function b64decode(b64){return decodeURIComponent(escape(atob(b64.replace(/\s/g,''))))}
+
+function renderForm(prices){
+  const area=$('#form-area');
+  area.innerHTML='';
+  const groups={};
+  Object.entries(prices).forEach(([key,p])=>{
+    const g=p.group||'Прочее';
+    (groups[g]=groups[g]||[]).push([key,p]);
+  });
+  Object.entries(groups).forEach(([g,items])=>{
+    const card=document.createElement('div');card.className='card';
+    const h=document.createElement('h2');h.textContent=g;card.appendChild(h);
+    items.forEach(([key,p])=>{
+      const row=document.createElement('div');row.className='row';
+      const label=document.createElement('span');label.className='label';label.textContent=p.label||key;
+      const value=document.createElement('span');value.className='value';
+      if(p.pre){const f=document.createElement('span');f.className='fix';f.textContent=p.pre;value.appendChild(f);}
+      const input=document.createElement('input');
+      input.type='text';input.value=p.amount;input.dataset.key=key;
+      input.setAttribute('aria-label',p.label||key);
+      value.appendChild(input);
+      if(p.post){const f=document.createElement('span');f.className='fix';f.textContent=p.post;value.appendChild(f);}
+      row.appendChild(label);row.appendChild(value);
+      card.appendChild(row);
+    });
+    area.appendChild(card);
+  });
+}
+
+async function loadPrices(){
+  try{
+    const r=await fetch(FILE+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    renderForm(await r.json());
+  }catch(e){
+    try{
+      const r=await fetch('https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+FILE+'?t='+Date.now(),{cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      renderForm(await r.json());
+    }catch(e2){
+      $('#form-area').innerHTML='<p class="loading">Не получилось загрузить цены. Проверь интернет и обнови страницу.</p>';
+    }
+  }
+}
+loadPrices();
+
+function hdrs(){return{Authorization:'Bearer '+TOKEN,Accept:'application/vnd.github+json','Content-Type':'application/json'}}
+
+$('#publish').addEventListener('click',async()=>{
+  const inputs=[...document.querySelectorAll('input[data-key]')];
+  if(!inputs.length){showStatus('err','Цены ещё не загрузились.');return;}
+  if(!TOKEN){showStatus('err','Сначала вставь токен в блоке «Доступ» выше.');refreshTokenUI();return;}
+  const empty=inputs.find(i=>!i.value.trim());
+  if(empty){empty.focus();showStatus('err','Есть пустое поле — заполни его или верни старое значение.');return;}
+  const btn=$('#publish');btn.disabled=true;
+  showStatus('busy','Публикую…');
+  try{
+    const g=await fetch(API+'?ref='+BRANCH,{headers:hdrs(),cache:'no-store'});
+    if(g.status===401||g.status===403)throw new Error('auth');
+    if(!g.ok)throw new Error('HTTP '+g.status);
+    const cur=await g.json();
+    const data=JSON.parse(b64decode(cur.content));
+    inputs.forEach(i=>{if(data[i.dataset.key])data[i.dataset.key].amount=i.value.trim();});
+    const put=await fetch(API,{method:'PUT',headers:hdrs(),body:JSON.stringify({
+      message:'Update pricing via admin panel',
+      branch:BRANCH,sha:cur.sha,
+      content:b64encode(JSON.stringify(data,null,2)+'\n')
+    })});
+    if(put.status===401||put.status===403)throw new Error('auth');
+    if(put.status===409)throw new Error('conflict');
+    if(!put.ok)throw new Error('HTTP '+put.status);
+    showStatus('ok','Готово! Цены опубликованы ✦ Сайт обновится через 1–2 минуты.');
+  }catch(e){
+    if(e.message==='auth')showStatus('err','Токен не подошёл или истёк — нажми «сменить» в блоке «Доступ» и вставь новый.');
+    else if(e.message==='conflict')showStatus('err','Файл цен только что менялся кем-то ещё. Обнови страницу и попробуй снова.');
+    else showStatus('err','Не получилось опубликовать ('+e.message+'). Проверь интернет и попробуй ещё раз.');
+  }finally{btn.disabled=false;}
+});
+</script>
+</body>
+</html>

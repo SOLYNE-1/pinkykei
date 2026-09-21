@@ -416,10 +416,10 @@ footer .credit a:hover{border-color:var(--rose-deep)}
           <li>sRGB / CMYK</li>
           <li>No commercial fees for indie authors</li>
         </ul>
-        <div class="prow"><span class="label">Head shot</span><span class="val"><small>from</small> $60</span></div>
-        <div class="prow"><span class="label">Half body</span><span class="val"><small>from</small> $80</span></div>
-        <div class="prow"><span class="label">Full body</span><span class="val"><small>from</small> $100</span></div>
-        <div class="prow"><span class="label">Extra character</span><span class="val">+100%<small> of base</small></span></div>
+        <div class="prow"><span class="label">Head shot</span><span class="val" data-price="character.headshot"><small>from</small> $60</span></div>
+        <div class="prow"><span class="label">Half body</span><span class="val" data-price="character.halfbody"><small>from</small> $80</span></div>
+        <div class="prow"><span class="label">Full body</span><span class="val" data-price="character.fullbody"><small>from</small> $100</span></div>
+        <div class="prow"><span class="label">Extra character</span><span class="val" data-price="character.extra">+100%<small> of base</small></span></div>
         <div class="examples">
           <button class="example" type="button" data-example="price-character.jpg">See an example</button>
         </div>
@@ -435,12 +435,12 @@ footer .credit a:hover{border-color:var(--rose-deep)}
           <li>sRGB / CMYK</li>
           <li>No commercial fees for indie authors</li>
         </ul>
-        <div class="prow"><span class="label">2 characters <small>without background</small></span><span class="val">$200</span></div>
-        <div class="prow"><span class="label">Extra character</span><span class="val">+$80</span></div>
+        <div class="prow"><span class="label">2 characters <small>without background</small></span><span class="val" data-price="scene.two">$200</span></div>
+        <div class="prow"><span class="label">Extra character</span><span class="val" data-price="scene.extra">+$80</span></div>
         <p class="psub">+ Background (required)</p>
-        <div class="prow"><span class="label">Simple <small>Minimalist elements like flowers, stars, clouds, maybe some trees, falling leaves</small></span><span class="val">+$30</span></div>
-        <div class="prow"><span class="label">Medium <small>Defined environments (room, forest, streets, etc.), moderate details, multiple depth levels in artwork</small></span><span class="val">+$50</span></div>
-        <div class="prow"><span class="label">Complex <small>Detailed foliage, mountains with rock textures, ambient effects</small></span><span class="val">+$80</span></div>
+        <div class="prow"><span class="label">Simple <small>Minimalist elements like flowers, stars, clouds, maybe some trees, falling leaves</small></span><span class="val" data-price="scene.bg_simple">+$30</span></div>
+        <div class="prow"><span class="label">Medium <small>Defined environments (room, forest, streets, etc.), moderate details, multiple depth levels in artwork</small></span><span class="val" data-price="scene.bg_medium">+$50</span></div>
+        <div class="prow"><span class="label">Complex <small>Detailed foliage, mountains with rock textures, ambient effects</small></span><span class="val" data-price="scene.bg_complex">+$80</span></div>
         <div class="examples">
           <button class="example" type="button" data-example="price-scene.jpg">See an example</button>
         </div>
@@ -456,8 +456,8 @@ footer .credit a:hover{border-color:var(--rose-deep)}
           <li>CMYK</li>
           <li>No commercial fees for indie authors</li>
         </ul>
-        <div class="prow"><span class="label">Front cover</span><span class="val">$170</span></div>
-        <div class="prow"><span class="label">Full cover <small>wraparound</small></span><span class="val"><small>from</small> $300</span></div>
+        <div class="prow"><span class="label">Front cover</span><span class="val" data-price="cover.front">$170</span></div>
+        <div class="prow"><span class="label">Full cover <small>wraparound</small></span><span class="val" data-price="cover.full"><small>from</small> $300</span></div>
         <div class="examples">
           <button class="example" type="button" data-example="price-cover-1.jpg">Front cover</button>
           <button class="example" type="button" data-example="price-cover-2.jpg">Full cover</button>
@@ -552,6 +552,18 @@ if(heroArt){
     eyeBall.style.setProperty('--ey',(dy*k*(r.height/2))+'px');
   });
 }
+// live prices from prices.json (edited via admin.html); hardcoded values remain as fallback
+fetch('prices.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(prices=>{
+  if(!prices)return;
+  document.querySelectorAll('[data-price]').forEach(el=>{
+    const p=prices[el.dataset.price];
+    if(!p||!p.amount)return;
+    el.textContent='';
+    if(p.pre){const s=document.createElement('small');s.textContent=p.pre;el.appendChild(s);el.append(' ');}
+    el.append(p.amount);
+    if(p.post){const s=document.createElement('small');s.textContent=' '+p.post;el.appendChild(s);}
+  });
+}).catch(()=>{});
 </script>
 </body>
 </html>
