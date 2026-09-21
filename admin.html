@@ -60,88 +60,204 @@ h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:2rem;text-al
 #status.ok{color:var(--olive-deep)}
 #status.err{color:#b04a5a}
 #status.busy{color:var(--ink-soft)}
-.token-card small{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:10px}
-.token-row{display:flex;gap:10px;margin-top:6px}
-.token-row input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.8);font-size:.9rem;outline:none;color:var(--ink)}
-.token-row button{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:8px;border:1px solid var(--olive);background:rgba(138,143,94,.1);color:var(--olive-deep);cursor:pointer}
-.token-ok{color:var(--olive-deep);font-size:.9rem}
-.token-ok a{color:var(--ink-dim);font-size:.8rem;cursor:pointer;text-decoration:underline}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.82rem;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:5px}
+.field input{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:8px;
+  background:rgba(255,255,255,.85);font-size:1rem;outline:none;color:var(--ink);font-family:inherit;transition:border .3s;
+}
+.field input:focus{border-color:var(--rose-deep)}
+.hint{font-size:.82rem;color:var(--ink-soft);margin-top:12px}
+.linkline{text-align:center;margin-top:14px;font-size:.85rem}
+.linkline a{color:var(--ink-dim);text-decoration:underline;cursor:pointer}
 details{margin-top:12px;font-size:.85rem;color:var(--ink-soft)}
 details summary{cursor:pointer;color:var(--olive-deep)}
 details ol{margin:10px 0 0 20px}
 details li{margin-bottom:6px}
 details a{color:var(--rose-deep)}
 .loading{text-align:center;color:var(--ink-dim);padding:30px 0;font-style:italic}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand">PINKY KEI</div>
   <h1>Управление прайсом</h1>
-  <p class="sub">Поменяй цифры и нажми «Опубликовать» — сайт <a href="https://pinkykei.art/#pricing" target="_blank" rel="noopener">pinkykei.art</a> обновится через 1–2&nbsp;минуты ✦</p>
+  <p class="sub">Сайт: <a href="https://pinkykei.art/#pricing" target="_blank" rel="noopener">pinkykei.art</a> ✦ после публикации обновляется за 1–2&nbsp;минуты</p>
 
-  <div class="card token-card" id="token-card">
-    <h2>🔑 Доступ</h2>
-    <div id="token-setup" hidden>
-      <div class="token-row">
-        <input type="password" id="token-input" placeholder="Вставь сюда токен" autocomplete="off">
-        <button type="button" id="token-save">Сохранить</button>
-      </div>
-      <small>Токен хранится только в этом браузере и никуда, кроме GitHub, не отправляется.</small>
-      <details>
-        <summary>Где взять токен?</summary>
-        <ol>
-          <li>Зайди на GitHub под аккаунтом, у которого есть доступ к репозиторию <b>SOLYNE-1/pinkykei</b>.</li>
-          <li>Открой <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Settings → Developer settings → Fine-grained tokens → Generate new token</a>.</li>
-          <li>Repository access: <b>Only select repositories</b> → выбери <b>pinkykei</b>.</li>
-          <li>Permissions → Repository permissions → <b>Contents: Read and write</b>. Больше ничего не нужно.</li>
-          <li>Срок действия поставь максимальный, создай токен и вставь его сюда.</li>
-        </ol>
-      </details>
+  <!-- вход по паролю -->
+  <div id="screen-lock" class="card" hidden>
+    <h2>🔒 Вход</h2>
+    <div class="field">
+      <label for="lock-pass">Пароль</label>
+      <input type="password" id="lock-pass" autocomplete="current-password">
     </div>
-    <div id="token-done" hidden>
-      <span class="token-ok">Токен сохранён ✓ &nbsp;<a id="token-change">сменить</a></span>
-    </div>
+    <button class="btn" id="lock-enter" type="button">Войти</button>
   </div>
 
-  <div id="form-area"><p class="loading">Загружаю цены…</p></div>
+  <!-- первичная настройка / смена пароля -->
+  <div id="screen-setup" class="card" hidden>
+    <h2>⚙️ Настройка доступа</h2>
+    <div class="field">
+      <label for="setup-token">GitHub-токен</label>
+      <input type="password" id="setup-token" placeholder="github_pat_…" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="setup-pass">Придумай пароль (минимум 8 символов)</label>
+      <input type="password" id="setup-pass" autocomplete="new-password">
+    </div>
+    <div class="field">
+      <label for="setup-pass2">Пароль ещё раз</label>
+      <input type="password" id="setup-pass2" autocomplete="new-password">
+    </div>
+    <button class="btn" id="setup-save" type="button">Зашифровать и сохранить</button>
+    <p class="hint">Токен будет зашифрован этим паролем и сохранён в репозитории. Дальше для входа с любого устройства нужен только пароль.</p>
+    <details>
+      <summary>Где взять токен?</summary>
+      <ol>
+        <li>Зайди на GitHub под аккаунтом с доступом к репозиторию <b>SOLYNE-1/pinkykei</b>.</li>
+        <li>Открой <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Settings → Developer settings → Fine-grained tokens → Generate new token</a>.</li>
+        <li>Repository access: <b>Only select repositories</b> → выбери <b>pinkykei</b>.</li>
+        <li>Permissions → Repository permissions → <b>Contents: Read and write</b>. Больше ничего не нужно.</li>
+        <li>Срок действия поставь максимальный, создай токен и вставь его сюда.</li>
+      </ol>
+    </details>
+  </div>
 
-  <button class="btn" id="publish" type="button">✦ Опубликовать</button>
+  <!-- панель с ценами -->
+  <div id="screen-panel" hidden>
+    <div id="form-area"><p class="loading">Загружаю цены…</p></div>
+    <button class="btn" id="publish" type="button">✦ Опубликовать</button>
+    <p class="linkline"><a id="do-lock">выйти</a> · <a id="do-repass">сменить пароль</a></p>
+  </div>
+
   <p id="status"></p>
 </div>
 
 <script>
-const OWNER='SOLYNE-1',REPO='pinkykei',BRANCH='main',FILE='prices.json';
-const API='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+FILE;
+const OWNER='SOLYNE-1',REPO='pinkykei',BRANCH='main',FILE='prices.json',LOCK_FILE='admin-lock.json';
+const API_BASE='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/';
 const $=s=>document.querySelector(s);
 
-let TOKEN='';
-try{TOKEN=localStorage.getItem('pk_admin_token')||''}catch(e){}
-
-function refreshTokenUI(){
-  $('#token-setup').hidden=!!TOKEN;
-  $('#token-done').hidden=!TOKEN;
+// --- crypto core ---
+const ITER=600000;
+const bufToB64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const b64ToBuf=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function deriveKey(pass,salt,iter){
+  const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
 }
-refreshTokenUI();
-$('#token-save').addEventListener('click',()=>{
-  const v=$('#token-input').value.trim();
-  if(!v){showStatus('err','Поле с токеном пустое.');return;}
-  TOKEN=v;
-  try{localStorage.setItem('pk_admin_token',v)}catch(e){}
-  $('#token-input').value='';
-  showStatus('ok','Токен сохранён на этом устройстве.');
-  refreshTokenUI();
-});
-$('#token-change').addEventListener('click',()=>{
-  TOKEN='';
-  try{localStorage.removeItem('pk_admin_token')}catch(e){}
-  refreshTokenUI();
-});
+async function encryptToken(token,pass){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const key=await deriveKey(pass,salt,ITER);
+  const data=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(token));
+  return {v:1,iter:ITER,salt:bufToB64(salt),iv:bufToB64(iv),data:bufToB64(data)};
+}
+async function decryptToken(lock,pass){
+  const key=await deriveKey(pass,b64ToBuf(lock.salt),lock.iter||ITER);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBuf(lock.iv)},key,b64ToBuf(lock.data));
+  return new TextDecoder().decode(plain);
+}
+// --- end crypto core ---
 
+let TOKEN='';
+let LOCK=null;
+
+function show(screen){
+  ['screen-lock','screen-setup','screen-panel'].forEach(id=>{$('#'+id).hidden=(id!==screen);});
+}
 function showStatus(cls,msg){const s=$('#status');s.className=cls;s.textContent=msg;}
+function hdrs(t){return{Authorization:'Bearer '+(t||TOKEN),Accept:'application/vnd.github+json','Content-Type':'application/json'}}
 
-function b64encode(str){return btoa(unescape(encodeURIComponent(str)))}
-function b64decode(b64){return decodeURIComponent(escape(atob(b64.replace(/\s/g,''))))}
+function b64encodeText(str){return btoa(unescape(encodeURIComponent(str)))}
+function b64decodeText(b64){return decodeURIComponent(escape(atob(b64.replace(/\s/g,''))))}
+
+async function fetchLock(){
+  try{
+    const r=await fetch(LOCK_FILE+'?t='+Date.now(),{cache:'no-store'});
+    if(r.ok)return r.json();
+    if(r.status!==404)throw new Error('HTTP '+r.status);
+  }catch(e){}
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+LOCK_FILE+'?t='+Date.now(),{cache:'no-store'});
+    if(r.ok)return r.json();
+  }catch(e){}
+  return null;
+}
+
+async function init(){
+  try{TOKEN=sessionStorage.getItem('pk_tok')||''}catch(e){}
+  LOCK=await fetchLock();
+  if(TOKEN){show('screen-panel');loadPrices();return;}
+  if(LOCK){show('screen-lock');$('#lock-pass').focus();}
+  else{show('screen-setup');showStatus('busy','Доступ ещё не настроен — нужно один раз вставить токен и придумать пароль.');}
+}
+init();
+
+$('#lock-enter').addEventListener('click',unlock);
+$('#lock-pass').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
+async function unlock(){
+  const pass=$('#lock-pass').value;
+  if(!pass){showStatus('err','Введи пароль.');return;}
+  const btn=$('#lock-enter');btn.disabled=true;
+  showStatus('busy','Проверяю…');
+  try{
+    TOKEN=await decryptToken(LOCK,pass);
+    try{sessionStorage.setItem('pk_tok',TOKEN)}catch(e){}
+    $('#lock-pass').value='';
+    showStatus('','');
+    show('screen-panel');
+    loadPrices();
+  }catch(e){
+    showStatus('err','Пароль не подошёл. Попробуй ещё раз.');
+  }finally{btn.disabled=false;}
+}
+
+$('#setup-save').addEventListener('click',async()=>{
+  const token=$('#setup-token').value.trim();
+  const p1=$('#setup-pass').value,p2=$('#setup-pass2').value;
+  if(!token){showStatus('err','Вставь GitHub-токен.');return;}
+  if(p1.length<8){showStatus('err','Пароль слишком короткий — нужно минимум 8 символов.');return;}
+  if(p1!==p2){showStatus('err','Пароли не совпадают.');return;}
+  const btn=$('#setup-save');btn.disabled=true;
+  showStatus('busy','Проверяю токен…');
+  try{
+    const chk=await fetch(API_BASE+FILE+'?ref='+BRANCH,{headers:hdrs(token),cache:'no-store'});
+    if(chk.status===401||chk.status===403)throw new Error('auth');
+    if(!chk.ok)throw new Error('HTTP '+chk.status);
+    showStatus('busy','Шифрую и сохраняю…');
+    const lock=await encryptToken(token,p1);
+    let sha;
+    const cur=await fetch(API_BASE+LOCK_FILE+'?ref='+BRANCH,{headers:hdrs(token),cache:'no-store'});
+    if(cur.ok)sha=(await cur.json()).sha;
+    const body={message:'Set admin password',branch:BRANCH,content:b64encodeText(JSON.stringify(lock,null,2)+'\n')};
+    if(sha)body.sha=sha;
+    const put=await fetch(API_BASE+LOCK_FILE,{method:'PUT',headers:hdrs(token),body:JSON.stringify(body)});
+    if(!put.ok)throw new Error('HTTP '+put.status);
+    LOCK=lock;TOKEN=token;
+    try{sessionStorage.setItem('pk_tok',TOKEN)}catch(e){}
+    $('#setup-token').value='';$('#setup-pass').value='';$('#setup-pass2').value='';
+    showStatus('ok','Пароль установлен ✦ Теперь для входа нужен только он.');
+    show('screen-panel');
+    loadPrices();
+  }catch(e){
+    if(e.message==='auth')showStatus('err','Токен не подошёл — проверь, что он выдан на репозиторий pinkykei с правом Contents: Read and write.');
+    else showStatus('err','Не получилось сохранить ('+e.message+'). Проверь интернет и попробуй ещё раз.');
+  }finally{btn.disabled=false;}
+});
+
+$('#do-lock').addEventListener('click',()=>{
+  TOKEN='';
+  try{sessionStorage.removeItem('pk_tok')}catch(e){}
+  showStatus('','');
+  show('screen-lock');
+});
+$('#do-repass').addEventListener('click',()=>{
+  $('#setup-token').value=TOKEN;
+  showStatus('busy','Придумай новый пароль — токен уже подставлен.');
+  show('screen-setup');
+});
 
 function renderForm(prices){
   const area=$('#form-area');
@@ -186,36 +302,33 @@ async function loadPrices(){
     }
   }
 }
-loadPrices();
-
-function hdrs(){return{Authorization:'Bearer '+TOKEN,Accept:'application/vnd.github+json','Content-Type':'application/json'}}
 
 $('#publish').addEventListener('click',async()=>{
   const inputs=[...document.querySelectorAll('input[data-key]')];
   if(!inputs.length){showStatus('err','Цены ещё не загрузились.');return;}
-  if(!TOKEN){showStatus('err','Сначала вставь токен в блоке «Доступ» выше.');refreshTokenUI();return;}
+  if(!TOKEN){showStatus('err','Сессия закончилась — войди по паролю заново.');show('screen-lock');return;}
   const empty=inputs.find(i=>!i.value.trim());
   if(empty){empty.focus();showStatus('err','Есть пустое поле — заполни его или верни старое значение.');return;}
   const btn=$('#publish');btn.disabled=true;
   showStatus('busy','Публикую…');
   try{
-    const g=await fetch(API+'?ref='+BRANCH,{headers:hdrs(),cache:'no-store'});
+    const g=await fetch(API_BASE+FILE+'?ref='+BRANCH,{headers:hdrs(),cache:'no-store'});
     if(g.status===401||g.status===403)throw new Error('auth');
     if(!g.ok)throw new Error('HTTP '+g.status);
     const cur=await g.json();
-    const data=JSON.parse(b64decode(cur.content));
+    const data=JSON.parse(b64decodeText(cur.content));
     inputs.forEach(i=>{if(data[i.dataset.key])data[i.dataset.key].amount=i.value.trim();});
-    const put=await fetch(API,{method:'PUT',headers:hdrs(),body:JSON.stringify({
+    const put=await fetch(API_BASE+FILE,{method:'PUT',headers:hdrs(),body:JSON.stringify({
       message:'Update pricing via admin panel',
       branch:BRANCH,sha:cur.sha,
-      content:b64encode(JSON.stringify(data,null,2)+'\n')
+      content:b64encodeText(JSON.stringify(data,null,2)+'\n')
     })});
     if(put.status===401||put.status===403)throw new Error('auth');
     if(put.status===409)throw new Error('conflict');
     if(!put.ok)throw new Error('HTTP '+put.status);
     showStatus('ok','Готово! Цены опубликованы ✦ Сайт обновится через 1–2 минуты.');
   }catch(e){
-    if(e.message==='auth')showStatus('err','Токен не подошёл или истёк — нажми «сменить» в блоке «Доступ» и вставь новый.');
+    if(e.message==='auth')showStatus('err','Токен не подошёл или истёк — нужно настроить доступ заново (кнопка «сменить пароль»).');
     else if(e.message==='conflict')showStatus('err','Файл цен только что менялся кем-то ещё. Обнови страницу и попробуй снова.');
     else showStatus('err','Не получилось опубликовать ('+e.message+'). Проверь интернет и попробуй ещё раз.');
   }finally{btn.disabled=false;}
